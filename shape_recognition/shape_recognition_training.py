@@ -75,12 +75,28 @@ shapes = [f"angleCross",    # 0
 
 x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
-model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
-model.add(tf.keras.layers.Dense(128, activation='relu'))
-model.add(tf.keras.layers.Dense(128, activation='relu'))
-model.add(tf.keras.layers.Dense(7, activation='softmax'))
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=1)
-model.save('shape_recognition.keras')
 
+
+
+epochs = 30
+loss_list = []
+accuracy_list = []
+for i in range(epochs):
+    model = tf.keras.models.Sequential()
+    # model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
+
+    model.add(tf.keras.layers.Conv2D(2,5, activation='relu',input_shape=(64,64,1)))
+    model.add(tf.keras.layers.Flatten(input_shape=(60,60)))
+
+    model.add(tf.keras.layers.Dense(128, activation='relu'))
+    model.add(tf.keras.layers.Dense(128, activation='relu'))
+    model.add(tf.keras.layers.Dense(7, activation='softmax'))
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+    model.fit(x_train, y_train, epochs=i)
+
+    loss, accuracy = model.evaluate(x_test, y_test)
+    loss_list.append(loss)
+    accuracy_list.append(accuracy)
+
+for i in range(epochs):
+    print(f"For {i + 1} epochs we have {loss_list[i]:.4f} loss and {accuracy_list[i]:.4f} accuracy")
