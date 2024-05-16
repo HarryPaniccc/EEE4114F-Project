@@ -56,9 +56,6 @@ def get_dataset(address, shapes): # returns all labelled data from a dataset
 
     return (x, y)
 
-def train_model(x_train, y_train):
-
-
 
 addresses = [f"shape_recognition/shapesdataset/training_set",
              f"shape_recognition/shapesdataset/test_set"]
@@ -76,8 +73,6 @@ shapes = [f"angleCross",    # 0
 (x_train, y_train) = get_dataset(addresses[0], shapes) #training data
 (x_test, y_test) = get_dataset(addresses[1], shapes) #testing data
 
-train_model(x_train, y_train)
-
 x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
 model = tf.keras.models.Sequential()
@@ -86,6 +81,6 @@ model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dense(7, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=1)
 model.save('shape_recognition.keras')
 
