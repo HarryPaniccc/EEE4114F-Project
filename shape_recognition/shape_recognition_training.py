@@ -20,7 +20,8 @@ def get_shape_data(address, shape): # returns labeled set of one label type
 	
 
     x = np.empty((training_set_size, 64, 64))
-    y = np.full(training_set_size,shape, dtype='<U20')
+    y = np.full(training_set_size, 0)
+    # y = np.full(training_set_size,shape, dtype='<U20')
     
 
     while os.path.isfile(f"{address}/{shape}/{shape}_{"{:02d}".format(shape_number)}.jpg"): # so long as there is a shape here, excuse gross address formatting
@@ -28,8 +29,8 @@ def get_shape_data(address, shape): # returns labeled set of one label type
             img = cv2.imread(f"{address}/{shape}/{shape}_{"{:02d}".format(shape_number)}.jpg")[:,:,0]
             img = np.invert(np.array([img]))
             x[shape_number - index_difference] = img #again, indexing is broken because of how dataset is labelled
-            y[shape_number - index_difference] = shape
-            #x_train[0] = img
+            y[shape_number - index_difference] = shapes.index(shape)
+            # y[shape_number - index_difference] = shape
         except:
             #Failed
             print("Error because Harry is an idiot!")
@@ -38,13 +39,12 @@ def get_shape_data(address, shape): # returns labeled set of one label type
             #idfk how this works
     return (x, y)
 
-
-def get_dataset(addresses, shapes): # returns all labelled data from a dataset
+def get_dataset(address, shapes): # returns all labelled data from a dataset
     for i in range(len(shapes)):
-        (x_new, y_new) = get_shape_data(addresses[0], shapes[i])
+        (x_new, y_new) = get_shape_data(address, shapes[i])
   
-        plt.imshow(x_new[1], cmap = plt.cm.binary)
-        plt.show()
+        # plt.imshow(x_new[1], cmap = plt.cm.binary)
+        # plt.show()
 
         if i == 0:
             x = x_new
@@ -56,18 +56,37 @@ def get_dataset(addresses, shapes): # returns all labelled data from a dataset
 
     return (x, y)
 
+
 # Defining our target addresses and labels
 addresses = [f"shape_recognition/shapesdataset/training_set",
              f"shape_recognition/shapesdataset/test_set"]
 
-shapes = [f"angleCross", 
-          f"ellipse", 
-          f"hexagon", 
-          f"line", 
-          f"square", 
-          f"straightCross", 
-          f"triangle"]
+                            # Indices:
+                            # --------
+shapes = [f"angleCross",    # 0
+          f"ellipse",       # 1
+          f"hexagon",       # 2
+          f"line",          # 3
+          f"square",        # 4
+          f"straightCross", # 5
+          f"triangle"]      # 6
 
-(x_train, y_train) = get_dataset(addresses, shapes)
+(x_train, y_train) = get_dataset(addresses[0], shapes) #training data
+(x_test, y_test) = get_dataset(addresses[1], shapes) #testing data
 
+
+x_train = tf.keras.utils.normalize(x_train, axis = 1)
+x_test = tf.keras.utils.normalize(x_test, axis = 1)
+
+model = tf.keras.models.Sequential() #Basic?
+model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(10, activation='softmax'))
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+
+model.fit(x_train, y_train, epochs=5)
+
+model.save('handwritten.keras')
 # From this point on our x_train and y_train is correct
