@@ -11,7 +11,6 @@ mnist = tf.keras.datasets.mnist #Get dataset, all labeled
 #Sets train data and labels, as well as test data and labels
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-
 #Normalizing all shit to be not 0,255 but 0,1
 x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)

@@ -10,15 +10,19 @@ import tensorflow as tf
 def training_from(address, shape): # Both must be fstrings, 
 
     training_set_size = len(os.listdir(f"{address}/{shape}"))
-    x_train = [np.empty(64 * 64) for _ in range(training_set_size)]
-    y_train = [np.empty() for _ in range(training_set_size)]
+
+    x_train = np.empty((training_set_size, 64, 64))
+    y_train = np.full(training_set_size,shape, dtype='<U20')
+
+    # x_train = [np.empty(64 * 64) for _ in range(training_set_size)]
+    # y_train = [np.empty(64 * 64) for _ in range(training_set_size)]
     
     shape_number = 1
 
     while os.path.isfile(f"{address}/{shape}/{shape}_{"{:02d}".format(shape_number)}.jpg"): # so long as there is a shape here
         try:
-            img = cv2.imread(f"{address}/{shape}/{shape}_{"{:02d}".format(shape_number)}.jpg")
-            img = np.array([img])
+            img = cv2.imread(f"{address}/{shape}/{shape}_{"{:02d}".format(shape_number)}.jpg")[:,:,0]
+            img = np.invert(np.array([img]))
             x_train[shape_number - 1] = img
             y_train[shape_number - 1] = shape
             #x_train[0] = img
@@ -35,5 +39,6 @@ shape1 = f"angleCross"
 (x_train, y_train) = training_from(address1, shape1)
 
 # Proves we have got what we want
-# plt.imshow(x_train[1][0], cmap = plt.cm.binary)
-# plt.show()
+plt.imshow(x_train[1], cmap = plt.cm.binary)
+plt.show()
+print(y_train[1])
