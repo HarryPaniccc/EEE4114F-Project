@@ -7,7 +7,7 @@ import tensorflow as tf
 # Step 1: Import all the images as a datase
 
 #Reads in x_train and y_train values from a folder
-def get_dataset(address, shape): # returns x and y of a target address 
+def get_shape_data(address, shape): # returns labeled set of one label type 
 
     training_set_size = len(os.listdir(f"{address}/{shape}"))
 
@@ -38,6 +38,24 @@ def get_dataset(address, shape): # returns x and y of a target address
             #idfk how this works
     return (x, y)
 
+
+def get_dataset(addresses, shapes): # returns all labelled data from a dataset
+    for i in range(len(shapes)):
+        (x_new, y_new) = get_shape_data(addresses[0], shapes[i])
+  
+        plt.imshow(x_new[1], cmap = plt.cm.binary)
+        plt.show()
+
+        if i == 0:
+            x = x_new
+            y = y_new
+            continue
+
+        x = np.append(x, x_new, 0)
+        y = np.append(y, y_new, 0)
+
+    return (x, y)
+
 # Defining our target addresses and labels
 addresses = [f"shape_recognition/shapesdataset/training_set",
              f"shape_recognition/shapesdataset/test_set"]
@@ -50,27 +68,6 @@ shapes = [f"angleCross",
           f"straightCross", 
           f"triangle"]
 
-for i in range(len(shapes)):
-    (x_train_new, y_train_new) = get_dataset(addresses[0], shapes[i])
-  
-    plt.imshow(x_train_new[1], cmap = plt.cm.binary)
-    plt.show()
+(x_train, y_train) = get_dataset(addresses, shapes)
 
-    if i == 0:
-        x_train = x_train_new
-        y_train = y_train_new
-        continue
-    
-    x_train = np.append(x_train, x_train_new)
-    y_train = np.append(y_train, y_train_new)
-
-print(y_train[100])
-
-address1 = f"shape_recognition/shapesdataset/test_set"
-shape1 = f"angleCross"
-(x_train, y_train) = get_dataset(address1, shape1)
-# # Proves we have got what we want
-plt.imshow(x_train[51], cmap = plt.cm.binary)
-plt.show()
-print(y_train[51])
-print(x_train[51])
+# From this point on our x_train and y_train is correct
