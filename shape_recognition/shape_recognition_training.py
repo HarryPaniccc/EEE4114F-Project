@@ -76,40 +76,54 @@ x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
 
 
-max_epochs = 30
-epochs = np.linspace(1, max_epochs, max_epochs)
-print(epochs)
-loss_list = []
-accuracy_list = []
+## Epoch Testing
+# max_epochs = 30
+# epochs = np.linspace(1, max_epochs, max_epochs)
+# print(epochs)
+# loss_list = []
+# accuracy_list = []
 
-# Generates many models for a bunch of epochs to see which is most effective
-for i in epochs:
-    model = tf.keras.models.Sequential()
-    # model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
+# # Generates many models for a bunch of epochs to see which is most effective
+# for i in epochs:
+#     model = tf.keras.models.Sequential()
+#     # model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
 
-    model.add(tf.keras.layers.Conv2D(2,5, activation='relu',input_shape=(64,64,1)))
-    model.add(tf.keras.layers.Flatten(input_shape=(60,60)))
+#     model.add(tf.keras.layers.Conv2D(2,5, activation='relu',input_shape=(64,64,1)))
+#     model.add(tf.keras.layers.Flatten(input_shape=(60,60)))
 
-    model.add(tf.keras.layers.Dense(128, activation='relu'))
-    model.add(tf.keras.layers.Dense(128, activation='relu'))
-    model.add(tf.keras.layers.Dense(7, activation='softmax'))
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-    model.fit(x_train, y_train, epochs=int(i))
+#     model.add(tf.keras.layers.Dense(128, activation='relu'))
+#     model.add(tf.keras.layers.Dense(128, activation='relu'))
+#     model.add(tf.keras.layers.Dense(7, activation='softmax'))
+#     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+#     model.fit(x_train, y_train, epochs=int(i))
 
-    loss, accuracy = model.evaluate(x_test, y_test)
-    loss_list.append(loss)
-    accuracy_list.append(accuracy)
+#     loss, accuracy = model.evaluate(x_test, y_test)
+#     loss_list.append(loss)
+#     accuracy_list.append(accuracy)
 
-print(accuracy_list)
+# print(accuracy_list)
 
-for i in epochs:
-    print(f"For {int(i)} epochs we have {loss_list[int(i)-1]:.4f} loss and {accuracy_list[int(i)-1]:.4f} accuracy")
+# for i in epochs:
+#     print(f"For {int(i)} epochs we have {loss_list[int(i)-1]:.4f} loss and {accuracy_list[int(i)-1]:.4f} accuracy")
 
-plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
-plt.plot(epochs, loss_list, color='blue')
-plt.xlabel("Number of Epochs")
-plt.legend(["Error", "Loss"], loc="upper right")
-plt.show()
+# plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
+# plt.plot(epochs, loss_list, color='blue')
+# plt.xlabel("Number of Epochs")
+# plt.legend(["Error", "Loss"], loc="upper right")
+# plt.show()
 
+## Final Model
+model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
+# model.add(tf.keras.layers.Conv2D(2,5, activation='relu',input_shape=(64,64,1)))
+# model.add(tf.keras.layers.Flatten(input_shape=(60,60)))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(7, activation='softmax'))
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=9)
 
+loss, accuracy = model.evaluate(x_test, y_test)
+print(f"Loss = {loss}")
+print(f"Accuracy = {accuracy}")
 model.save('shape_recognition.keras')

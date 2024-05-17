@@ -93,6 +93,36 @@ model = tf.keras.models.Sequential()
 # model.add(tf.keras.layers.Dense(7, activation='softmax'))
 
 # the good model, using convolution and pooling
+# model.add(tf.keras.layers.Conv2D(8,9, activation='relu',input_shape=(64,64,1)))
+# model.add(tf.keras.layers.MaxPool2D(8,8))
+# model.add(tf.keras.layers.Flatten())
+# model.add(tf.keras.layers.Dense(16, activation='relu'))
+# model.add(tf.keras.layers.Dense(7, activation='softmax'))
+
+
+# model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+
+# # Checks models after each epochs to see which is most effective
+# for i in epochs:
+#     print(f"\n EPOCH NUMBER: {i}");
+#     model.fit(x_train, y_train)
+
+#     loss, accuracy = model.evaluate(x_test, y_test)
+#     loss_list.append(loss)
+#     accuracy_list.append(accuracy)
+
+# print(accuracy_list)
+
+# for i in epochs:
+#     print(f"For {int(i)} epochs we have {loss_list[int(i)-1]:.4f} loss and {accuracy_list[int(i)-1]:.4f} accuracy")
+
+# plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
+# plt.plot(epochs, loss_list, color='blue')
+# plt.xlabel("Number of Epochs")
+# plt.legend(["Error", "Loss"], loc="upper right")
+# plt.show()
+
+
 model.add(tf.keras.layers.Conv2D(8,9, activation='relu',input_shape=(64,64,1)))
 model.add(tf.keras.layers.MaxPool2D(8,8))
 model.add(tf.keras.layers.Flatten())
@@ -101,23 +131,5 @@ model.add(tf.keras.layers.Dense(7, activation='softmax'))
 
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-
-# Checks models after each epochs to see which is most effective
-for i in epochs:
-    print(f"\n EPOCH NUMBER: {i}");
-    model.fit(x_train, y_train)
-
-    loss, accuracy = model.evaluate(x_test, y_test)
-    loss_list.append(loss)
-    accuracy_list.append(accuracy)
-
-print(accuracy_list)
-
-for i in epochs:
-    print(f"For {int(i)} epochs we have {loss_list[int(i)-1]:.4f} loss and {accuracy_list[int(i)-1]:.4f} accuracy")
-
-plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
-plt.plot(epochs, loss_list, color='blue')
-plt.xlabel("Number of Epochs")
-plt.legend(["Error", "Loss"], loc="upper right")
-plt.show()
+model.fit(x_train, y_train, epochs=20)
+model.save('shape_recognition.keras')
