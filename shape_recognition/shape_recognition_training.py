@@ -77,11 +77,14 @@ x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
 
 
-
-epochs = 30
+epochs = np.linspace(1, 30, 30)
+print(epochs)
 loss_list = []
 accuracy_list = []
-for i in range(epochs):
+
+# Generates many models for a bunch of epochs to see which is most effective
+for i in epochs:
+    print(i)
     model = tf.keras.models.Sequential()
     # model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
 
@@ -100,3 +103,6 @@ for i in range(epochs):
 
 for i in range(epochs):
     print(f"For {i + 1} epochs we have {loss_list[i]:.4f} loss and {accuracy_list[i]:.4f} accuracy")
+
+plt.plot(epochs, accuracy_list, color='red')
+plt.show()
