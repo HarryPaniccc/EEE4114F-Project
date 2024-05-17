@@ -57,8 +57,7 @@ def get_dataset(address, shapes): # returns all labelled data from a dataset
     return (x, y)
 
 
-addresses = [f"shape_recognition/shapesdataset/training_set",
-             f"shape_recognition/shapesdataset/test_set"]
+addresses = [f"shape_recognition/shapesdataset/training_set", f"shape_recognition/shapesdataset/test_set"]
 
                             # Indices:
                             # --------
@@ -77,7 +76,8 @@ x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
 
 
-epochs = np.linspace(1, 30, 30)
+max_epochs = 30
+epochs = np.linspace(1, max_epochs, max_epochs)
 print(epochs)
 loss_list = []
 accuracy_list = []
@@ -100,8 +100,13 @@ for i in epochs:
     loss_list.append(loss)
     accuracy_list.append(accuracy)
 
-for i in epochs:
-    print(f"For {i + 1} epochs we have {loss_list[i]:.4f} loss and {accuracy_list[i]:.4f} accuracy")
+print(accuracy_list)
 
-plt.plot(epochs, accuracy_list, color='red')
+for i in epochs:
+    print(f"For {int(i)} epochs we have {loss_list[int(i)-1]:.4f} loss and {accuracy_list[int(i)-1]:.4f} accuracy")
+
+plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
+plt.plot(epochs, loss_list, color='blue')
+plt.ylabel("Number of Epochs")
+plt.legend(["Error", "Loss"], loc="upper right")
 plt.show()
