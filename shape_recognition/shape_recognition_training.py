@@ -110,3 +110,6 @@ plt.plot(epochs, loss_list, color='blue')
 plt.xlabel("Number of Epochs")
 plt.legend(["Error", "Loss"], loc="upper right")
 plt.show()
+
+
+model.save('shape_recognition.keras')
