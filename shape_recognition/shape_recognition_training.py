@@ -121,9 +121,25 @@ model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dense(7, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=9)
+model.fit(x_train, y_train, epochs=10)
 
 loss, accuracy = model.evaluate(x_test, y_test)
 print(f"Loss = {loss}")
 print(f"Accuracy = {accuracy}")
 model.save('shape_recognition.keras')
+
+test_image_number = 1
+while os.path.isfile(f"shape_recognition/homegrowntests/test_image_{test_image_number}.jpg"): # so long as there is a shape here, excuse gross address formatting
+    try:
+        img = cv2.imread(f"shape_recognition/homegrowntests/test_image_{test_image_number}.jpg")[:,:,0]
+        # img = np.invert(np.array([img]))
+        img = np.array([img])
+        prediction = model.predict(img)
+        chosen_shape = int(np.argmax(prediction))
+        print(f"The shape is a {shapes[chosen_shape]}")
+        plt.imshow(img[0], cmap=plt.cm.binary)
+        plt.show()
+    except:
+        print("Error because Harry is an idiot!")
+    finally:
+        test_image_number += 1
