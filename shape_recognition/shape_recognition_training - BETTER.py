@@ -6,6 +6,18 @@ import tensorflow as tf
 
 # Step 1: Import all the images as a datase
 
+
+                            # Indices:
+                            # --------
+shapes = [f"angleCross",    # 0
+          f"ellipse",       # 1
+          f"hexagon",       # 2
+          f"line",          # 3
+          f"square",        # 4
+          f"straightCross", # 5
+          f"triangle"]      # 6
+
+
 #Reads in x_train and y_train values from a folder
 def get_shape_data(address, shape): # returns labeled set of one label type 
 
@@ -21,30 +33,23 @@ def get_shape_data(address, shape): # returns labeled set of one label type
 
     x = np.empty((training_set_size, 64, 64))
     y = np.full(training_set_size, 0)
-    # y = np.full(training_set_size,shape, dtype='<U20')
-    
 
-    while os.path.isfile(f"{address}/{shape}/{shape}_{shape_number:02d}.jpg"): # so long as there is a shape here, excuse gross address formatting
+    while os.path.isfile(f"{address}/{shape}/{shape}_{shape_number:02d}.jpg"): # so long as there is a shape here
         try:
             img = cv2.imread(f"{address}/{shape}/{shape}_{shape_number:02d}.jpg")[:,:,0]
             img = np.invert(np.array([img]))
             x[shape_number - index_difference] = img #again, indexing is broken because of how dataset is labelled
             y[shape_number - index_difference] = shapes.index(shape)
-            # y[shape_number - index_difference] = shape
         except:
             #Failed
-            print("Error because Harry is an idiot!")
+            print("Error!")
         finally:
             shape_number += 1
-            #idfk how this works
     return (x, y)
 
 def get_dataset(address, shapes): # returns all labelled data from a dataset
     for i in range(len(shapes)):
         (x_new, y_new) = get_shape_data(address, shapes[i])
-  
-        # plt.imshow(x_new[1], cmap = plt.cm.binary)
-        # plt.show()
 
         if i == 0:
             x = x_new
@@ -76,7 +81,7 @@ x_train = tf.keras.utils.normalize(x_train, axis = 1)
 x_test = tf.keras.utils.normalize(x_test, axis = 1)
 
 
-max_epochs = 30
+max_epochs = 50
 epochs = np.linspace(1, max_epochs, max_epochs)
 print(epochs)
 loss_list = []

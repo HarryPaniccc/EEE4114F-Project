@@ -67,4 +67,4 @@ while os.path.isfile(f"shape_recognition/homegrowntests/test_image_{test_image_n
     finally:
         test_image_number += 1
 
-print(f"False detections: {falses}/{test_image_number}")
+print(f"False detections: {falses}/{test_image_number-1}")
