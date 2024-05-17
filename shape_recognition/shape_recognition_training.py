@@ -84,7 +84,6 @@ accuracy_list = []
 
 # Generates many models for a bunch of epochs to see which is most effective
 for i in epochs:
-    print(i)
     model = tf.keras.models.Sequential()
     # model.add(tf.keras.layers.Flatten(input_shape = (64,64)))
 
@@ -95,13 +94,13 @@ for i in epochs:
     model.add(tf.keras.layers.Dense(128, activation='relu'))
     model.add(tf.keras.layers.Dense(7, activation='softmax'))
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
-    model.fit(x_train, y_train, epochs=i)
+    model.fit(x_train, y_train, epochs=int(i))
 
     loss, accuracy = model.evaluate(x_test, y_test)
     loss_list.append(loss)
     accuracy_list.append(accuracy)
 
-for i in range(epochs):
+for i in epochs:
     print(f"For {i + 1} epochs we have {loss_list[i]:.4f} loss and {accuracy_list[i]:.4f} accuracy")
 
 plt.plot(epochs, accuracy_list, color='red')
