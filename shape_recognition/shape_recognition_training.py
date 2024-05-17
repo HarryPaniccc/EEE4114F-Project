@@ -107,6 +107,6 @@ for i in epochs:
 
 plt.plot(epochs, np.subtract(1, accuracy_list), color='red')
 plt.plot(epochs, loss_list, color='blue')
-plt.ylabel("Number of Epochs")
+plt.xlabel("Number of Epochs")
 plt.legend(["Error", "Loss"], loc="upper right")
 plt.show()
